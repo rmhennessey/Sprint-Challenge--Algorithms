@@ -1,3 +1,43 @@
+# Understand the Problem
+    # we want to sort a list of numbers
+    # we can move LEFT or RIGHT
+        # we cannot move past 0 on the LEFT
+        # we know what our POSITION is
+    # we can pick 1 item up at a time
+        # if we are holding an item & try to pick up another, we SWAP
+    # we can COMPARE items
+        # if held > listed, RETURN 1
+        # if held is < listed, RETURN -1
+        # if held == listed, RETURN 0
+    # we have a light that acts as a TRUE or FALSE
+        # THINK: WHILE TRUE...
+
+# Plan
+    # we want to pick up the item in front of us
+    # we want to move one space RIGHT 
+        # we cannot move LEFT to start
+    # we want to compare held item to listed item
+        # if held item is > listed then compare_item == 1
+            # make a SWAP
+            # move LEFT 1 space & put the item down (using SWAP)
+                # move RIGHT 1 space & START LOOP OVER
+                    # to start loop over, use the LIGHT_ON TRUE/FALSE
+        # if held item is < listed then compare_item == -1
+            # move LEFT 
+            # put item down in empty spot (using SWAP)
+            # move RIGHT
+            # pick up item (using SWAP)
+        # if held item == listed, then compare_item == 0
+            # move LEFT 
+            # put item down in empty spot (using SWAP)
+            # move RIGHT
+    # move RIGHT until we cannot go any farther
+    # start to move LEFT
+
+
+
+
+
 class SortingRobot:
     def __init__(self, l):
         """
@@ -97,7 +137,58 @@ class SortingRobot:
         Sort the robot's list.
         """
         # Fill this out
-        pass
+
+        # use SWAP to pick up first item and then move to right
+        self.swap_item()
+        self.move_right()
+
+        # when SWAP happens, set_light_on to begin loop
+        self.set_light_on()
+
+        # light on == swap happened, so we run through
+        while self.light_is_on():
+            # turn light off so we can turn back on when SWAPS happen
+            self.set_light_off()
+
+            # we want to start moving right until we can't
+            while self.can_move_right():
+                # picking up item means we also make an empty slot
+                # once we pick up, we want to move right to compare
+                self.swap_item()
+                self.move_right()
+
+                # compare held to listed item (listed item = item in front of us)
+                # if held > listed, SWAP
+                # move LEFT to SWAP newly held item into empty slot
+                # move RIGHT to start loop over (turn the light on)
+                if self.compare_item() == 1:
+                    self.swap_item()
+                    self.move_left()
+                    self.swap_item()
+                    self.move_right()
+                    self.set_light_on()
+
+                # if held is < listed, move LEFT 
+                # SWAP to put down
+                # move RIGHT
+                # made it a little DRY-er since held < listed & held == are same
+                if self.compare_item() == -1 or self.compare_item() == 0:
+                    self.move_left()
+                    self.swap_item()
+                    self.move_right()
+
+                # if held item == listed
+                # move LEFT to put back down
+                # move RIGHT to start over
+                # if self.compare_item() == 0:
+                #     self.move_left()
+                #     self.swap_item()
+                #     self.move_right()
+
+            # once we can't go RIGHT any more, move LEFT
+            if self.light_is_on():
+                while self.can_move_left():
+                    self.move_left()
 
 
 if __name__ == "__main__":
